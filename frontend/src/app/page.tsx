@@ -61,7 +61,7 @@ export default function Home() {
           <div className="flex flex-col mt-8 p-4 border rounded-md shadow-md truncate">
             {(["ETH", "USDC", "LINK"] as const).map((token) => (
               <div key={token} className="flex items-center justify-between">
-                <span className="font-bold">{token}</span>
+                <span className="font-bold">{token}:</span>
                 <span>{formatBalance(data.balances[token])}</span>
               </div>
             ))}
