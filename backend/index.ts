@@ -38,7 +38,7 @@ const ERC20_ABI = [
 const handler = async (req: Request, res: Response) => {
   const { address } = req.params
   if (!isAddress(address)) {
-    res.status(400).json({ error: 'Invalid Ethereum address.' })
+    res.status(400).json({ message: 'Invalid Ethereum address!' })
     return
   }
 
@@ -64,7 +64,7 @@ const handler = async (req: Request, res: Response) => {
     })
   } catch (err) {
     console.error('Error fetching balances:', err.message)
-    res.status(500).json({ error: 'Failed to fetch balances.' })
+    res.status(500).json({ message: 'Failed to get balances!' })
   }
 }
 
