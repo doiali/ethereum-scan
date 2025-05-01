@@ -75,13 +75,6 @@ export default function Home() {
 const formatBalance = (balance: Balance) => {
   const value = Number(balance.value) / 10 ** balance.decimals // The value with lost precision
   if (value === 0) return "0"
-  const rawBalance = BigInt(balance.value)
-  const divisor = BigInt(10 ** balance.decimals)
-  const integerPart = rawBalance / divisor
-  const decimalPart = rawBalance % divisor
-  const formattedBalance =
-    integerPart.toLocaleString() +
-    '.' +
-    decimalPart.toString().padStart(balance.decimals, '0')
-  return formattedBalance
+  if (value >= 1) return value.toLocaleString(undefined, { maximumFractionDigits: 4 })
+  else return value.toPrecision(4)
 }
