@@ -5,13 +5,17 @@ import { Input } from "@/components/ui/input"
 import { useState } from 'react'
 import ky from 'ky'
 
-
 const apiClient = ky.create({ prefixUrl: 'http://localhost:8000/api/', retry: 0 })
 
+type Balance = {
+  decimals: number
+  value: string
+}
+
 type Balances = {
-  ETH: string
-  USDC: string
-  LINK: string
+  ETH: Balance
+  USDC: Balance
+  LINK: Balance
 }
 
 type RepsoneData = {
@@ -55,11 +59,10 @@ export default function Home() {
         </form>
         {data && (
           <div className="flex flex-col mt-8 p-4 border rounded-md shadow-md truncate">
-            <p className="mb-4">{data.address}</p>
             {(["ETH", "USDC", "LINK"] as const).map((token) => (
               <div key={token} className="flex items-center justify-between">
                 <span className="font-bold">{token}</span>
-                <span>{data.balances[token]}</span>
+                <span>{formatBalance(data.balances[token])}</span>
               </div>
             ))}
           </div>)
@@ -67,4 +70,18 @@ export default function Home() {
       </div>
     </div>
   )
+}
+
+const formatBalance = (balance: Balance) => {
+  const value = Number(balance.value) / 10 ** balance.decimals // The value with lost precision
+  if (value === 0) return "0"
+  const rawBalance = BigInt(balance.value)
+  const divisor = BigInt(10 ** balance.decimals)
+  const integerPart = rawBalance / divisor
+  const decimalPart = rawBalance % divisor
+  const formattedBalance =
+    integerPart.toLocaleString() +
+    '.' +
+    decimalPart.toString().padStart(balance.decimals, '0')
+  return formattedBalance
 }

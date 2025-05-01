@@ -48,17 +48,19 @@ const handler = async (req: Request, res: Response) => {
   try {
     // ETH balance
     const ethWei = await web3.eth.getBalance(address)
-    const ethBalance = web3.utils.fromWei(ethWei, 'ether')
 
     // Token balances
-    const balances: Record<string, string> = { ETH: ethBalance }
+    const balances: Record<string, { decimals: number, value: string }> = {
+      ETH: {
+        decimals: 18,
+        value: ethWei.toString(),
+      }
+    }
 
     for (const [symbol, token] of Object.entries(TOKENS)) {
       const contract = new web3.eth.Contract(ERC20_ABI, token.address)
       const rawBalance = await contract.methods.balanceOf(address).call() as bigint
-      const divisor = BigInt(10 ** token.decimals)
-      const formattedBalance = (rawBalance / divisor).toLocaleString() + '.' + (rawBalance % divisor).toString().padStart(token.decimals, '0').substring(0, 8)
-      balances[symbol] = formattedBalance
+      balances[symbol] = { decimals: token.decimals, value: rawBalance.toString() }
     }
 
     res.json({
