@@ -2,13 +2,16 @@ import express, { Request, Response } from 'express'
 import Web3 from 'web3'
 import dotenv from 'dotenv'
 import { isAddress } from 'web3-validator'
-
+import cors from 'cors'
 dotenv.config()
 
 const INFURA_URL = `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`
 const web3 = new Web3(new Web3.providers.HttpProvider(INFURA_URL))
 
 const app = express()
+app.use(cors({
+  origin: 'http://localhost:3000'
+})) // Allow requests from the frontend
 const PORT = 8000
 
 // Token contracts on Ethereum mainnet
