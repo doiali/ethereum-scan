@@ -76,5 +76,5 @@ const formatBalance = (balance: Balance) => {
   const value = Number(balance.value) / 10 ** balance.decimals // The value with lost precision
   if (value === 0) return "0"
   if (value >= 1) return value.toLocaleString(undefined, { maximumFractionDigits: 4 })
-  else return value.toPrecision(4)
+  else return value.toLocaleString(undefined, { maximumSignificantDigits:4 })
 }
